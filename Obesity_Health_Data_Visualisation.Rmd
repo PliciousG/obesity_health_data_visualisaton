@@ -1,0 +1,659 @@
+---
+title: "Visualisation for Health Data (YCHI5084M) Summative"
+date: "2024-02-21"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    theme: cerulean
+    highlight: kate
+---
+
+***
+# How Do the Levels of Physical Activity, Smoking Status, and Alcohol Consumption Relate to Different Levels of Obesity?
+***
+
+### Background
+***
+
+Beyond its status as a health condition that is characterised by excessive fat buildup, obesity is a complex, multifactorial public health crisis that has been escalating globally and, according to the World Health Organisation, has nearly tripled in prevalence since 1975, affecting millions of individuals across all age brackets and making it one of today's most blatantly visible- yet most neglected- public health challenges of the 21st century (1). Individuals with obesity are twice as likely to develop hypertension, five times as likely to develop type 2 diabetes, and have an increased risk of cancer such as colon cancer and premature mortality. This places a substantial strain on healthcare systems (2).
+
+In the United Kingdom, the National Health Service (NHS) spends approximately £6 billion annually treating the consequences of obesity, and this cost is forecasted to increase to £10 billion a year by 2050 (3). In addition to direct healthcare costs, obesity incurs significant indirect costs to the economy, including reduced workforce productivity and increased social care use, estimated at around £7.5 billion a year (4).
+
+The complexity of obesity arises from its multifactorial aetiology, encompassing behavioural, environmental, genetic, and socioeconomic influences (5). Within this context, lifestyle choices - specifically, physical activity levels, smoking status and alcohol intake - stand out as factors to be explored in terms of the role they play in different levels of obesity (6). Understanding the interplay of these factors is crucial for developing and implementing tailored public health policies and strategies that can address the growing epidemic at its many levels (3, 7). Addressing obesity is crucial not only for health but also for economic reasons, as reducing obesity-related conditions can lead to significant cost savings and improvements in quality of life and workforce productivity. 
+
+Thus, this research aims to analyse the complex relationships between physical activity, smoking, alcohol consumption and different levels of obesity.
+
+
+**Research Question**
+
+|    How do the levels of physical activity, smoking status, and alcohol consumption relate to different levels of obesity?
+
+
+***
+### Data Evaluation and Preparation
+***
+
+**Data Source**
+
+The dataset used in this study contains information about estimated obesity levels in individuals from three countries based on family history, dietary measurements, physical activities and social behaviours (including drinking alcohol and smoking).
+
+**Variables**
+
+The dataset contains 18 attributes related to individual health, lifestyle choices, and obesity classification. Each variable is described below;
+
+1.  **ID**: a unique identifier for each of the participants
+2.	**Gender**: participants’ gender (Male, Female)
+3.	**Age**: participants age in years
+4.	**Height**: the height of the participant in meters
+5.	**Weight**: participants weight in kg
+6.	**Family history with overweight**: Indicates whether the participant has a family history of overweight (Yes, No)
+7.	**FAVC**: Frequent consumption of high-caloric food (Yes, No).
+8.	**FCVC**: Frequency of consumption of vegetables (1-3 scale).
+9.	**NCP**: Number of main meals (1-4 scale).
+10.	**CAEC**: Food consumption between meals (Never, Sometimes, Frequently, Always).
+11.	**SMOK**E: Smoking status of the participant (Yes, No).
+12.	**CH2O**: Daily water drinking (1-3 scale).
+13.	**SCC**: Monitoring of calorie consumption (Yes, No).
+14.	**FAF**: Physical activity frequency (0-3 scale).
+15.	**TUE**: Time using technology devices (0-2 scale).
+16.	**CALC**: Alcohol consumption (Never, Sometimes, Frequently, Always).
+17.	**MTRANS**: Main transportation mode (e.g., Public Transportation, Walking).
+18.	**NObeyesdad**: Obesity classification based on WHO standards (e.g., Insufficient Weight, Normal Weight, Overweight Level I)
+
+This study focuses on three lifestyle variables, including **Smoking status** (attribute 11), **Physical activity frequency** (attribute 14), and **Alcohol consumption** (attribute 16), to visualise the relationship between these variables and different types of obesity.
+
+**Sample Size**
+
+The dataset comprises a sample of 2,111 individuals, with each row representing a unique participant aged between 14 and 61 years.
+
+***
+
+### Data Quality Evaluation and Cleaning
+***
+
+An initial data exploration was performed to understand the data and assess the data quality:
+
+**1. Completeness**
+
+To ensure there are no missing values within the dataset, and if any, to quantify and address them using appropriate methods (such as deletion or imputation) depending on the pattern and context of missingness (8). The function `sum(is.na(obesity_data))` was used to evaluate for missing values and revealed there were no missing values within the dataset.
+
+
+**2. Consistency and Validity**
+
+Ensuring variables are in a consistent format and appropriate units and ranges, as inconsistencies in data could introduce bias within the data, leading to inaccurate results and visualisations (8, 9). Data inconsistencies were observed in variables- Age, Height, Weight, and categorical variables like the number of daily meals. These were corrected by rounding up height and weight to two decimal values, and Age was categorised into groups. To correct mismatched variable encoding (8, 9). Categorical variables including gender, family history of overweight, frequency of high caloric diet) encoded as ‘characters’, were corrected to factors.
+
+
+**3. Uniqueness**
+
+To ensure there are no duplicate entries as this can influence the data being visualised resulting in misleading visuals and could lead to incorrect conclusions (9). Using the function `duplicated()` revealed there were no duplicate rows present in the dataset.
+
+
+**4. Outliers**
+
+To identify outliers in continuous variables (age, weight, height) using statistical method (Interquartile Range) and address them depending on their nature and the analysis scope of this study (9). Upon evaluation, Height and weight were found to have a single outlier each, which, upon further evaluation, appears not to influence the data quality significantly. 164 outliers were reported in Age. However, this was representative of the age distribution of the dataset which had 1827 of the total 2111 participants are within the ages of 18-35 years indicating that the dataset was skewed in terms of the age of the participants. 
+
+
+```{r include=FALSE}
+
+# loading libaries
+library(readxl)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(plotly)
+library(gt)
+library(gtsummary)
+library(kableExtra)
+```
+
+```{r include=FALSE}
+
+# reading the dataset
+obesity_data <- read_excel("C:\\Users\\preci\\Downloads\\Obesity_Data.xlsx")
+```
+
+```{r include=FALSE}
+
+# to get a comprehensive overview of the data
+# to inspect the data structure and identify the data types
+glimpse(obesity_data)
+str(obesity_data)
+summary(obesity_data)
+
+# data types of categorical variables like gender and daily meals are mismatched (in character format) 
+```
+
+```{r include=FALSE}
+
+# to get a better view of the data across different segments
+head(obesity_data)
+tail(obesity_data)
+sample_n(obesity_data, 10)
+
+# data inconsistencies were observed in variables- Age, Height, Weight, and categorical variables- FCVC, NCP, CH2O, FAF, and TUE
+
+```
+
+```{r include=FALSE}
+# assessing data completeness
+
+colSums(is.na(obesity_data))
+sum(is.na(obesity_data))
+
+# there were no missing data
+```
+
+```{r include=FALSE}
+# checking for duplicate entries 
+sum(duplicated(obesity_data))
+
+# also no duplicates
+```
+
+```{r include=FALSE}
+# initial data cleaning
+
+# copying the original dataframe to retain the original data
+data<- obesity_data
+```
+
+
+```{r include=FALSE}
+
+# correcting data type mismatch by converting categorical variables from character to factors
+
+data$Gender <- as.factor(data$Gender)
+data$family_history_with_overweight <- as.factor(data$family_history_with_overweight)
+data$FAVC <- as.factor(data$FAVC)
+data$CAEC <- as.factor(data$CAEC)
+data$SMOKE <- as.factor(data$SMOKE)
+data$SCC <- as.factor(data$SCC)
+data$CALC <- as.factor(data$CALC)
+data$MTRANS <- as.factor(data$MTRANS)
+data$NObeyesdad <- factor(data$NObeyesdad,
+                          levels = c("Insufficient_Weight", "Normal_Weight", "Overweight_Level_I", "Overweight_Level_II", "Obesity_Type_I", "Obesity_Type_II", "Obesity_Type_III"))
+```
+
+```{r include=FALSE}
+# to correct the data type for the variables FCVC, NCP, CH2O, FAF, and TUE, the decimal factors within these variables will first be mapped to the nearest category to ensure they are not treated as distinct levels of the factor
+
+
+# Creating a function to map to nearest category
+map_to_nearest_category <- function(x, categories) {
+  sapply(x, function(value) {
+    # Find which category is closest to the current value
+    closest_category <- categories[which.min(abs(categories - value))]
+    return(closest_category)
+  })
+}
+
+# defining the intended categories for FCVC
+intended_categories_FCVC <- c(1, 2, 3)
+
+# applying the mapping
+data$FCVC_mapped <- map_to_nearest_category(data$FCVC, intended_categories_FCVC)
+
+# converting the mapped variable to a factor
+data$FCVC_mapped <- as.factor(data$FCVC_mapped)
+
+print(data$FCVC_mapped)
+print(unique(data$FCVC_mapped))
+```
+
+
+```{r include=FALSE}
+# converting the others
+# correcting NCP data type
+intended_categories_NCP <- c(1, 2, 3)
+
+data$NCP_mapped <- map_to_nearest_category(data$NCP, intended_categories_NCP)
+
+data$NCP_mapped <- as.factor(data$NCP_mapped)
+
+print(unique(data$NCP_mapped))
+
+# correcting CH2O data type
+intended_categories_CH2O <- c(1, 2, 3)
+
+data$CH2O_mapped <- map_to_nearest_category(data$CH2O, intended_categories_CH2O)
+
+data$CH2O_mapped <- as.factor(data$CH2O_mapped)
+
+print(unique(data$CH2O_mapped))
+
+# correcting FAF data type
+intended_categories_FAF <- c(0, 1, 2, 3)
+
+data$FAF_mapped <- map_to_nearest_category(data$FAF, intended_categories_FAF)
+
+data$FAF_mapped <- as.factor(data$FAF_mapped)
+
+print(unique(data$FAF_mapped))
+
+# correcting TUE data type
+intended_categories_TUE <- c(0, 1, 2)
+
+data$TUE_mapped <- map_to_nearest_category(data$TUE, intended_categories_TUE)
+
+data$TUE_mapped <- as.factor(data$TUE_mapped)
+
+print(unique(data$NCP_mapped))
+```
+
+```{r include=FALSE}
+# cleaning weight and height by rounding up to two decimal values
+data$New_Weight <- round(data$Weight, digits = 2)
+print(data$New_Weight)
+
+data$New_Height <- round(data$Height, digits = 2)
+print(data$New_Height)
+
+```
+
+
+```{r include=FALSE}
+# creating a neww dataframe with cleaned variables for easy viaualisation
+
+new_data<- data %>%
+  select(Gender, Age, New_Height, New_Weight, family_history_with_overweight, FAVC, FCVC_mapped, NCP_mapped, CAEC, SMOKE, CH2O_mapped, SCC, FAF_mapped, TUE_mapped, CALC, MTRANS, NObeyesdad)
+  
+str(new_data)
+```
+
+
+```{r include=FALSE}
+
+# FURTHER EXPLORATION
+
+# evaluating for outliers
+# creating a function to spot outliers
+detect_outliers <- function(x) {
+  Q1 <- quantile(x, 0.25)
+  Q3 <- quantile(x, 0.75)
+  IQR <- Q3 - Q1
+  lower <- Q1 - 1.5 * IQR
+  upper <- Q3 + 1.5 * IQR
+  x < lower | x > upper
+}
+
+# applying the function to the numerical columns in the dataset
+outliers <- new_data %>%
+  select_if(is.numeric) %>%
+  sapply(detect_outliers)
+
+
+sum_outliers <- colSums(outliers)
+print(sum_outliers)
+
+# outliers are present in age (168), New_Weight (1)
+```
+
+
+```{r include=FALSE}
+# visualising the outliers in age
+ggplot(new_data, aes(y = Age)) +
+  geom_boxplot(fill = "grey", color = "black") +
+  theme_minimal() +
+  ggtitle("Box Plot of Age")
+
+```
+
+
+```{r include=FALSE}
+# visualisng age distribution to better understand the outliers
+
+# categorising age into age_bins to improve consistency and reduce the complexity of the data for visualisation
+
+new_data$age_group <- cut(new_data$Age,
+                    breaks = c(-Inf, 18, 25, 35, 45, 55, 65, Inf),
+                    labels = c("Under 18", "18-25", "26-35", "36-45", "46-55", "56-65", "Over 65"),
+                    right = FALSE)
+
+# plotting age groups to visualise the distribution
+
+age_group_counts <- new_data %>%
+  group_by(age_group) %>%
+  summarise(count = n())
+
+ggplot(age_group_counts, aes(x = age_group, y = count)) + 
+  geom_bar(stat = "identity", fill = "lightblue", color = "black") + 
+  geom_text(aes(label = count), vjust = -0.5, color = "black", size = 3.5) +
+  labs(title = "Number of Individuals by Age Group",
+       x = "Age Group",
+       y = "Number of Individuals") + 
+  theme_minimal() + 
+  theme(text = element_text(size = 12), 
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.title = element_text(hjust = 0.5))
+# the dataset is skwed by age, 1827 of the total 2111 participants are within the ages of 18-35 years.
+```
+
+
+```{r include=FALSE}
+# visualising the outlier in weight
+# boxplot of weight by gender with outliers highlighted in blue
+
+ggplot(new_data, aes(x = Gender, y = New_Weight)) + 
+  geom_boxplot(fill= "grey", outlier.color = "blue", outlier.shape = 8) +
+  theme_minimal() +
+  ggtitle("Box Plot of Weight")
+
+max(new_data$New_Weight)
+
+# this outlier will be ignored considering it is a single outlier and unlikely to have a significant effect on the dataset
+
+```
+
+
+***
+
+## Data Visualisations
+
+***
+
+
+**Research Question**
+
+|     How do the levels of physical activity, smoking status, and alcohol consumption relate to different levels of obesity?
+
+
+***
+
+
+**Table 1. Demographic Summary Table**
+
+
+```{r echo=FALSE}
+# creating a demographic summary table
+summary_table <- new_data %>%
+  select(-age_group) %>%
+  rename(
+    Height = New_Height, 
+    Weight = New_Weight,
+    'Family History of Overweight' = family_history_with_overweight, 
+    FAVC= FAVC,
+    FCVC= FCVC_mapped, 
+    NCP= NCP_mapped, 
+    CH2O = CH2O_mapped, 
+    FAF= FAF_mapped, 
+    TUE= TUE_mapped, 
+    'Obesity Types'= NObeyesdad
+    ) %>%
+  tbl_summary(
+     by = 'Gender', # stratified by gender for easy comparison and to provide more detailed understanding of the dataset  
+    type = list(
+      all_continuous() ~ "continuous2",
+      all_categorical() ~ "categorical"
+    ),
+    statistic = list(
+      all_continuous() ~ c("{mean} ({sd})", "{median} [{p25}, {p75}]"),
+      all_categorical() ~ "{n} ({p}%)"
+    ),
+    digits = all_continuous() ~ 2,
+    missing = "ifany"
+  ) %>%
+  add_n() %>% 
+  add_p() %>%
+  bold_labels() %>% 
+  modify_header(label = "**Characteristics**")
+
+# Converting and styling with kableExtra to improve accessibility
+kable_table <- summary_table %>%
+  as_kable() %>% 
+  kable_styling(
+    bootstrap_options = c("striped", "condensed", "hover"),
+    font_size = 16,
+    full_width = F
+  ) %>%
+  kableExtra::scroll_box(width = "100%", height = "500px")
+
+kable_table
+
+```
+```
+FAVC (High Caloric Food Consumption, no/yes), FCVC (Vegetable Intake, scale: Never (1), Sometimes (2), Always(3)), NCP (Main Meals Daily, scale: between 1 and 2(1), three(2), more than three(3)), CAEC (Snacking between meals), CH2O (Water Consumption Daily, scale: <1L(1), 1-2L(2), >2L(3)), SCC (Calorie Monitoring), FAF (Physical Activity Frequency, scale: none (0) ,1 or 2 days (1), 2 or 3 days (2), 4 or 5 days (3)), TUE (Tech Use Duration, 0-2 hours (0), 3-5 hours (1), more than 5 hours (2)), CALC (Alcohol Consumption), MTRANS (Usual Transport Method), NObeyesdad (Obesity Categories).
+```
+
+
+
+```{r include=FALSE}
+# for a more detailed summary
+# creating a demographic summary table by level of obesity
+table_demographic <- new_data %>%
+  select(Age, New_Height, New_Weight, Gender, NObeyesdad) %>%
+  group_by(NObeyesdad) %>%  # stratified by obesity level for easy comparison and to provide more detailed understanding of the dataset  
+  tbl_summary(
+    by = NObeyesdad, 
+    type = all_continuous() ~ "continuous2",
+    statistic =
+      all_continuous() ~ c("{mean} ({sd})", "{median}, ({p25}, {p75})"),
+    digits = all_continuous() ~ 2
+  ) %>%
+  add_p() %>%
+  add_n() %>%
+  modify_header(label = "**Demographic**") %>%
+  bold_labels()
+
+# Converting and styling with kableExtra to improve accessibility
+kable_table <- table_demographic %>%
+  as_kable() %>% 
+  kable_styling(
+    bootstrap_options = c("striped", "condensed", "hover"),
+    font_size = 16,
+    full_width = F
+  ) %>%
+  kableExtra::scroll_box(width = "100%", height = "500px")
+
+kable_table
+```
+
+
+
+***
+
+### Visualisation 1: Table Summary 
+
+***
+
+
+**The Visualisation**
+
+The summary table displays an overall view of the data, and it shows that the data largely comprises of individuals with ages 18-35 years. This also speaks to the generalisability of findings derived from the dataset, implying that such findings may not be applicable to the wider population. Likewise, obesity type II and III revealed a major disproportion in male and female participants, with obesity type II consisting only 2 participants as opposed to the 295 male participants within the same category. Obesity type III revealed 1 male participant and 323 female participants. This disproportion may allude to some data quality issues during data collection process. 
+
+**Justification of Design Choice**
+
+
+A summary table provides a clear high-level overview of the data and is effective for visualising a dataset such as this with multiple variables which otherwise would have been challenging to represent all the multidimensional variables in a single bar plot, heat map or correlation plot.
+
+
+The summary table also allows for a comparison across different demographic characteristics as shown in Table 1. And this feature is particularly useful in health data where such stratification can potentially provide clarity into health disparities or outcomes. However, while this summary table gives a clear overview of the data, it is not as effective as charts or graphs in representing patterns, trends or outliers that may be present within the data. 
+Nevertheless, a summary table appears to be optimal for presenting a comprehensive overview of the data in a way that is statistically detailed and accessible.
+
+
+In addition, considering that the target audience of this study would include policymakers and healthcare managements, this table provide a straightforward presentation of figures and is an effective method of communicating the data to such audience (10, 11).
+
+
+**Accessibility Considerations and Visualisation Principles**
+
+To improve readability for individuals with visual impairments the font size was set to 16. Bold labels were used to aid visual distinction of headings and improve scannability (10).
+
+The table width was adjusted for to prevent the data stretching across the screen, aiding readability (10). The table accessibility was also improved by including using `scroll_box` to ensure ease of navigation for users. `kable_styling` with `bootstrap_options` were also utilised to improve readability and navigation for users.
+
+For clear labelling, columns were renamed to be more descriptive and improve clarity as well as ease of understanding. For effective data representation, mean, median and percentile were used to describe continuous variables while counts and percentages were utilised for categorical variables.
+
+
+***
+
+#### Visualisation 2:Physical Activity Across Obesity Types
+
+***
+
+```{r echo=FALSE}
+# filtering the dataset by obesity levels I, II, and III
+data_filtered <- subset(new_data, NObeyesdad %in% c("Obesity_Type_I", "Obesity_Type_II", "Obesity_Type_III"))
+
+# applying labels to the physical activity levels for potting
+data_filtered$FAF_mapped <- factor(data_filtered$FAF_mapped, 
+                                   levels = c(0, 1, 2, 3),
+                                   labels = c("None", "1-2 days", "2-3 days", "4-5 days"))
+
+# improving readability of obesity levels
+data_filtered$NObeyesdad <- factor(data_filtered$NObeyesdad,
+                levels = c("Obesity_Type_I", "Obesity_Type_II", "Obesity_Type_III"),
+                labels = c("Obesity Level I", "Obesity Level II", "Obesity Level III"))
+
+
+# plotting a bar chart to show the distribution of physical activities across obesity levels 
+ggplot(data_filtered, aes(x = FAF_mapped)) +
+  geom_bar(fill = "#1F4E79") +
+   geom_text(stat = 'count', aes(label = after_stat(count)), vjust = -1, color = "black") +
+  facet_wrap(~ NObeyesdad) +
+  labs(title = "Comparison of Physical Activity Across Obesity Levels",
+       x = "Frequency of Physical Activity",
+       y = "Total Individuals") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 12),
+        axis.title = element_text(size = 12),
+        plot.title = element_text(size = 16, face = "bold"),
+        legend.position = "none")
+```
+
+
+***
+
+#### Visualisation 3: Smoking Status Across Obesity Types
+
+***
+
+```{r echo=FALSE}
+
+# plotting smoking status by obesity levels
+data_filtered$SMOKE <- factor(data_filtered$SMOKE, labels = c("No", "Yes"))
+
+ggplot(data_filtered, aes(x = NObeyesdad, fill = SMOKE)) +
+  geom_bar(position = "dodge") +
+  geom_text(stat = 'count', aes(label = after_stat(count)),  position = position_dodge(width = 0.9), vjust = -0.25, size = 3.5, color = "black") +
+  labs(title = "Comparison of Smoking Status Across Obesity Categories",
+       subtitle = "Visualising the distribution of smokers and non-smokers within each obesity category",
+       x = "Obesity Levels",
+       y = "Total Individuals") +
+  scale_fill_manual(values = c("No" = "darkgrey", "Yes" = "#1F4E79"), name = "Smoking Status") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 0, hjust = 1),
+        plot.title = element_text(size = 14, face = "bold"),
+        legend.title = element_text(size = 12))
+
+```
+
+
+
+***
+
+#### Visualisation 4: Alcohol Consumpution Across Obesity Types
+
+***
+
+```{r echo=FALSE}
+
+# creating an interactive plot with ggplot and plotly
+
+data_filtered$CALC <- factor(data_filtered$CALC, 
+          levels = c("no", "Sometimes", "Frequently", "Always"),
+          labels = c("no", "Sometimes", "Frequently", "Always"))
+
+p <- ggplot(data_filtered, aes(x = NObeyesdad, fill = CALC)) +
+  geom_bar(position = "dodge") +
+  scale_fill_manual(values = c("no"= "darkgrey", "Sometimes"= "#1F4E79", "Frequently" = "brown", "Always"= "lightblue"),name = "Alcohol Consumption") + 
+  labs(title = "Alcohol Consumption Across Obesity Categories",
+       x = "Obesity Levels",
+       y = "Total Individuals") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 0, hjust = 1),
+        plot.title = element_text(size = 14, face = "bold"))
+
+ggplotly(p)
+
+```
+
+
+***
+
+### Visualisation 2, 3 and 4: Distribution of Physical Activity, Smoking Status and Alcohol Consumption Across Obesity Levels
+***
+
+**The Visualisation**
+
+Faceting by obesity levels allows for a direct comparison of physical activity, smoking status, and alcohol consumption across the three obesity types and addresses the research question. In achieving this, aesthetic mapping was used to categorise and differentiate between the levels of physical activity, smoking status, and alcohol consumption across obesity categories. 
+
+
+Visualisation 3 however revealed a major disproportion between smokers and non-smokers across the three obesity categories. However, further exploration also revealed a large disproportion between non-smokers and smokers in the entire data, with ~98% of participants responding ‘no’ to the question on smoking status. Table 1. shows the proportion of male to female smokers and non-smokers within the data.
+
+**Justification of Design Choice**
+
+Considering that the variables (Physical activity, Smoking Status Alcohol Consumption and Obesity levels) are categorical, a bar chart displays the association in a simple and effective way that is intuitive, allowing the audience to quickly understand the data (10). 
+
+An alternative approach could be to use a mosaic plot or grouped bar which is more compact, however it may present an accessibility challenge as they may not be as intuitive as a bar chart to the general population. 
+
+In visualising alcohol consumption (visualisation 3), `ggplot` object was converted into an interactive chart using `plotly` providing additional information about the chart when tooltips are used and enhance accessibility. Axis labels and descriptive titles were included to aid user understanding. All bar axis were set at zero to prevent presentation of misleading visuals (10).
+
+**Accessibility Considerations and Visualisation Principles**
+
+As a colourblind-friendly approach for presenting the visualisation and to avoid reliance on colour differentiation, a single fill colour (`#1F4E79`) was used for the bar chart showing the association between physical activity and obesity (10).
+
+
+To improve readability, suitable font sizes were used for the axis and title texts, and for ease of understanding and clarity, labels were directly added to the bars using (`geom_text()`) as this makes it easier for users to understand the data without cross-referencing with the axis (10).
+
+
+For visualisation 2, with clustered labels on the x-axis, orientated was set angle 45 ° for improved legibility as opposed to using horizontal labels, and grid lines were omitted to help focus attention on the data itself (10).
+
+***
+## Discussion
+***
+
+**Summary of Findings**
+
+
+The chart reveals a trend where higher levels of obesity are associated with lower levels of physical activity and higher alcohol consumption. The chart on smoking status revealed a significant disproportion in data which would require further clarification.
+
+**Implications for Policy and Public Health**
+
+
+The observed trends in physical activity and alcohol consumption reveals potential areas for public health intervention. The inverse relationship between physical activity and obesity types suggests a need for policies that promote physical activity, especially for individuals at higher obesity levels, and as a preventive measure for individuals in overweight categories.
+Likewise, alcohol reduction interventions could be beneficial considering the positive association between alcohol consumption and obesity levels.
+
+
+**Limitations**
+
+
+Some limitations associated with this work include;
+
+
+**1. The self-reported nature of the data**: This could be a source of bias in reporting of physical activity, smoking and alcohol consumption.
+
+**2. Representativeness**: The data may not be representative of the wider population implying that finding from this data may not be generalisable.
+
+
+**Future Work**
+
+For future work, statistical analysing combinations of the variables may be beneficial in exploring this topic further.
+
+
+***
+## Reference
+***
+
+1.	WHO. Obesity and overweight [Online]. 2021 [Available from: https://www.who.int/news-room/fact-sheets/detail/obesity-and-overweight.
+2.	Donini LM, Rosano A, Di Lazzaro L, Lubrano C, Carbonelli M, Pinto A, et al. Impact of Disability, Psychological Status, and Comorbidity on Health-Related Quality of Life Perceived by Subjects with Obesity. Obes Facts. 2020;13(2):191-200.
+3.	Gupta S, Chen M. Medical management of obesity. Clin Med (Lond). 2023;23(4):323-9.
+4.	Andrea G, Anna G, Diana S. Productivity loss due to overweight and obesity: a systematic review of indirect costs. BMJ Open. 2017;7(10):e014632.
+5.	Mansoor S, Jain P, Hassan N, Farooq U, Mirza MA, Pandith AA, et al. Role of Genetic and Dietary Implications in the Pathogenesis of Global Obesity. Food Reviews International. 2022;38(sup1):434-55.
+6.	Lahti-Koski M, Pietinen P, Heliövaara M, Vartiainen E. Associations of body mass index and obesity with physical activity, food choices, alcohol intake, and smoking in the 1982-1997 FINRISK Studies. Am J Clin Nutr. 2002;75(5):809-17.
+7.	Flegal KM, Kit BK, Orpana H, Graubard BI. Association of all-cause mortality with overweight and obesity using standard body mass index categories: a systematic review and meta-analysis. Jama. 2013;309(1):71-82.
+8.	Azeroual O. Data Wrangling in Database Systems: Purging of Dirty Data. Data (Basel). 2020;5(2):50.
+9.	Williams GJ. The Essentials of Data Science : Knowledge Discovery Using R. First edition. ed. Boca Raton, FL: CRC Press; 2017.
+10.	Krause A, Rennie N, Tarran B. Best Practices for Data Visualisation 2024. Available from: https://royal-statistical-society.github.io/datavisguide/.
+11.	Yihui X, Allaire JJ, Garrett G. R Markdown: The Definitive Guide 2023. Available from: https://bookdown.org/yihui/rmarkdown/document-templates.html?version=2023.12.0+369&mode=desktop.
+
+
+
