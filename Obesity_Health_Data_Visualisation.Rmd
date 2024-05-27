@@ -1,6 +1,5 @@
 ---
-title: "Visualisation for Health Data (YCHI5084M) Summative"
-date: "2024-02-21"
+title: "How Do the Levels of Physical Activity, Smoking Status, and Alcohol Consumption Relate to Different Levels of Obesity?"
 output:
   html_document:
     toc: true
@@ -8,91 +7,6 @@ output:
     theme: cerulean
     highlight: kate
 ---
-
-***
-# How Do the Levels of Physical Activity, Smoking Status, and Alcohol Consumption Relate to Different Levels of Obesity?
-***
-
-### Background
-***
-
-Beyond its status as a health condition that is characterised by excessive fat buildup, obesity is a complex, multifactorial public health crisis that has been escalating globally and, according to the World Health Organisation, has nearly tripled in prevalence since 1975, affecting millions of individuals across all age brackets and making it one of today's most blatantly visible- yet most neglected- public health challenges of the 21st century (1). Individuals with obesity are twice as likely to develop hypertension, five times as likely to develop type 2 diabetes, and have an increased risk of cancer such as colon cancer and premature mortality. This places a substantial strain on healthcare systems (2).
-
-In the United Kingdom, the National Health Service (NHS) spends approximately £6 billion annually treating the consequences of obesity, and this cost is forecasted to increase to £10 billion a year by 2050 (3). In addition to direct healthcare costs, obesity incurs significant indirect costs to the economy, including reduced workforce productivity and increased social care use, estimated at around £7.5 billion a year (4).
-
-The complexity of obesity arises from its multifactorial aetiology, encompassing behavioural, environmental, genetic, and socioeconomic influences (5). Within this context, lifestyle choices - specifically, physical activity levels, smoking status and alcohol intake - stand out as factors to be explored in terms of the role they play in different levels of obesity (6). Understanding the interplay of these factors is crucial for developing and implementing tailored public health policies and strategies that can address the growing epidemic at its many levels (3, 7). Addressing obesity is crucial not only for health but also for economic reasons, as reducing obesity-related conditions can lead to significant cost savings and improvements in quality of life and workforce productivity. 
-
-Thus, this research aims to analyse the complex relationships between physical activity, smoking, alcohol consumption and different levels of obesity.
-
-
-**Research Question**
-
-|    How do the levels of physical activity, smoking status, and alcohol consumption relate to different levels of obesity?
-
-
-***
-### Data Evaluation and Preparation
-***
-
-**Data Source**
-
-The dataset used in this study contains information about estimated obesity levels in individuals from three countries based on family history, dietary measurements, physical activities and social behaviours (including drinking alcohol and smoking).
-
-**Variables**
-
-The dataset contains 18 attributes related to individual health, lifestyle choices, and obesity classification. Each variable is described below;
-
-1.  **ID**: a unique identifier for each of the participants
-2.	**Gender**: participants’ gender (Male, Female)
-3.	**Age**: participants age in years
-4.	**Height**: the height of the participant in meters
-5.	**Weight**: participants weight in kg
-6.	**Family history with overweight**: Indicates whether the participant has a family history of overweight (Yes, No)
-7.	**FAVC**: Frequent consumption of high-caloric food (Yes, No).
-8.	**FCVC**: Frequency of consumption of vegetables (1-3 scale).
-9.	**NCP**: Number of main meals (1-4 scale).
-10.	**CAEC**: Food consumption between meals (Never, Sometimes, Frequently, Always).
-11.	**SMOK**E: Smoking status of the participant (Yes, No).
-12.	**CH2O**: Daily water drinking (1-3 scale).
-13.	**SCC**: Monitoring of calorie consumption (Yes, No).
-14.	**FAF**: Physical activity frequency (0-3 scale).
-15.	**TUE**: Time using technology devices (0-2 scale).
-16.	**CALC**: Alcohol consumption (Never, Sometimes, Frequently, Always).
-17.	**MTRANS**: Main transportation mode (e.g., Public Transportation, Walking).
-18.	**NObeyesdad**: Obesity classification based on WHO standards (e.g., Insufficient Weight, Normal Weight, Overweight Level I)
-
-This study focuses on three lifestyle variables, including **Smoking status** (attribute 11), **Physical activity frequency** (attribute 14), and **Alcohol consumption** (attribute 16), to visualise the relationship between these variables and different types of obesity.
-
-**Sample Size**
-
-The dataset comprises a sample of 2,111 individuals, with each row representing a unique participant aged between 14 and 61 years.
-
-***
-
-### Data Quality Evaluation and Cleaning
-***
-
-An initial data exploration was performed to understand the data and assess the data quality:
-
-**1. Completeness**
-
-To ensure there are no missing values within the dataset, and if any, to quantify and address them using appropriate methods (such as deletion or imputation) depending on the pattern and context of missingness (8). The function `sum(is.na(obesity_data))` was used to evaluate for missing values and revealed there were no missing values within the dataset.
-
-
-**2. Consistency and Validity**
-
-Ensuring variables are in a consistent format and appropriate units and ranges, as inconsistencies in data could introduce bias within the data, leading to inaccurate results and visualisations (8, 9). Data inconsistencies were observed in variables- Age, Height, Weight, and categorical variables like the number of daily meals. These were corrected by rounding up height and weight to two decimal values, and Age was categorised into groups. To correct mismatched variable encoding (8, 9). Categorical variables including gender, family history of overweight, frequency of high caloric diet) encoded as ‘characters’, were corrected to factors.
-
-
-**3. Uniqueness**
-
-To ensure there are no duplicate entries as this can influence the data being visualised resulting in misleading visuals and could lead to incorrect conclusions (9). Using the function `duplicated()` revealed there were no duplicate rows present in the dataset.
-
-
-**4. Outliers**
-
-To identify outliers in continuous variables (age, weight, height) using statistical method (Interquartile Range) and address them depending on their nature and the analysis scope of this study (9). Upon evaluation, Height and weight were found to have a single outlier each, which, upon further evaluation, appears not to influence the data quality significantly. 164 outliers were reported in Age. However, this was representative of the age distribution of the dataset which had 1827 of the total 2111 participants are within the ages of 18-35 years indicating that the dataset was skewed in terms of the age of the participants. 
-
 
 ```{r include=FALSE}
 
@@ -110,7 +24,7 @@ library(kableExtra)
 ```{r include=FALSE}
 
 # reading the dataset
-obesity_data <- read_excel("C:\\Users\\preci\\Downloads\\Obesity_Data.xlsx")
+obesity_data <- read_excel("C:\\Users\\___\\Downloads\\Obesity_Data.xlsx")
 ```
 
 ```{r include=FALSE}
@@ -352,15 +266,6 @@ max(new_data$New_Weight)
 
 ***
 
-
-**Research Question**
-
-|     How do the levels of physical activity, smoking status, and alcohol consumption relate to different levels of obesity?
-
-
-***
-
-
 **Table 1. Demographic Summary Table**
 
 
@@ -451,40 +356,6 @@ kable_table
 
 
 ***
-
-### Visualisation 1: Table Summary 
-
-***
-
-
-**The Visualisation**
-
-The summary table displays an overall view of the data, and it shows that the data largely comprises of individuals with ages 18-35 years. This also speaks to the generalisability of findings derived from the dataset, implying that such findings may not be applicable to the wider population. Likewise, obesity type II and III revealed a major disproportion in male and female participants, with obesity type II consisting only 2 participants as opposed to the 295 male participants within the same category. Obesity type III revealed 1 male participant and 323 female participants. This disproportion may allude to some data quality issues during data collection process. 
-
-**Justification of Design Choice**
-
-
-A summary table provides a clear high-level overview of the data and is effective for visualising a dataset such as this with multiple variables which otherwise would have been challenging to represent all the multidimensional variables in a single bar plot, heat map or correlation plot.
-
-
-The summary table also allows for a comparison across different demographic characteristics as shown in Table 1. And this feature is particularly useful in health data where such stratification can potentially provide clarity into health disparities or outcomes. However, while this summary table gives a clear overview of the data, it is not as effective as charts or graphs in representing patterns, trends or outliers that may be present within the data. 
-Nevertheless, a summary table appears to be optimal for presenting a comprehensive overview of the data in a way that is statistically detailed and accessible.
-
-
-In addition, considering that the target audience of this study would include policymakers and healthcare managements, this table provide a straightforward presentation of figures and is an effective method of communicating the data to such audience (10, 11).
-
-
-**Accessibility Considerations and Visualisation Principles**
-
-To improve readability for individuals with visual impairments the font size was set to 16. Bold labels were used to aid visual distinction of headings and improve scannability (10).
-
-The table width was adjusted for to prevent the data stretching across the screen, aiding readability (10). The table accessibility was also improved by including using `scroll_box` to ensure ease of navigation for users. `kable_styling` with `bootstrap_options` were also utilised to improve readability and navigation for users.
-
-For clear labelling, columns were renamed to be more descriptive and improve clarity as well as ease of understanding. For effective data representation, mean, median and percentile were used to describe continuous variables while counts and percentages were utilised for categorical variables.
-
-
-***
-
 #### Visualisation 2:Physical Activity Across Obesity Types
 
 ***
@@ -575,85 +446,5 @@ p <- ggplot(data_filtered, aes(x = NObeyesdad, fill = CALC)) +
 ggplotly(p)
 
 ```
-
-
-***
-
-### Visualisation 2, 3 and 4: Distribution of Physical Activity, Smoking Status and Alcohol Consumption Across Obesity Levels
-***
-
-**The Visualisation**
-
-Faceting by obesity levels allows for a direct comparison of physical activity, smoking status, and alcohol consumption across the three obesity types and addresses the research question. In achieving this, aesthetic mapping was used to categorise and differentiate between the levels of physical activity, smoking status, and alcohol consumption across obesity categories. 
-
-
-Visualisation 3 however revealed a major disproportion between smokers and non-smokers across the three obesity categories. However, further exploration also revealed a large disproportion between non-smokers and smokers in the entire data, with ~98% of participants responding ‘no’ to the question on smoking status. Table 1. shows the proportion of male to female smokers and non-smokers within the data.
-
-**Justification of Design Choice**
-
-Considering that the variables (Physical activity, Smoking Status Alcohol Consumption and Obesity levels) are categorical, a bar chart displays the association in a simple and effective way that is intuitive, allowing the audience to quickly understand the data (10). 
-
-An alternative approach could be to use a mosaic plot or grouped bar which is more compact, however it may present an accessibility challenge as they may not be as intuitive as a bar chart to the general population. 
-
-In visualising alcohol consumption (visualisation 3), `ggplot` object was converted into an interactive chart using `plotly` providing additional information about the chart when tooltips are used and enhance accessibility. Axis labels and descriptive titles were included to aid user understanding. All bar axis were set at zero to prevent presentation of misleading visuals (10).
-
-**Accessibility Considerations and Visualisation Principles**
-
-As a colourblind-friendly approach for presenting the visualisation and to avoid reliance on colour differentiation, a single fill colour (`#1F4E79`) was used for the bar chart showing the association between physical activity and obesity (10).
-
-
-To improve readability, suitable font sizes were used for the axis and title texts, and for ease of understanding and clarity, labels were directly added to the bars using (`geom_text()`) as this makes it easier for users to understand the data without cross-referencing with the axis (10).
-
-
-For visualisation 2, with clustered labels on the x-axis, orientated was set angle 45 ° for improved legibility as opposed to using horizontal labels, and grid lines were omitted to help focus attention on the data itself (10).
-
-***
-## Discussion
-***
-
-**Summary of Findings**
-
-
-The chart reveals a trend where higher levels of obesity are associated with lower levels of physical activity and higher alcohol consumption. The chart on smoking status revealed a significant disproportion in data which would require further clarification.
-
-**Implications for Policy and Public Health**
-
-
-The observed trends in physical activity and alcohol consumption reveals potential areas for public health intervention. The inverse relationship between physical activity and obesity types suggests a need for policies that promote physical activity, especially for individuals at higher obesity levels, and as a preventive measure for individuals in overweight categories.
-Likewise, alcohol reduction interventions could be beneficial considering the positive association between alcohol consumption and obesity levels.
-
-
-**Limitations**
-
-
-Some limitations associated with this work include;
-
-
-**1. The self-reported nature of the data**: This could be a source of bias in reporting of physical activity, smoking and alcohol consumption.
-
-**2. Representativeness**: The data may not be representative of the wider population implying that finding from this data may not be generalisable.
-
-
-**Future Work**
-
-For future work, statistical analysing combinations of the variables may be beneficial in exploring this topic further.
-
-
-***
-## Reference
-***
-
-1.	WHO. Obesity and overweight [Online]. 2021 [Available from: https://www.who.int/news-room/fact-sheets/detail/obesity-and-overweight.
-2.	Donini LM, Rosano A, Di Lazzaro L, Lubrano C, Carbonelli M, Pinto A, et al. Impact of Disability, Psychological Status, and Comorbidity on Health-Related Quality of Life Perceived by Subjects with Obesity. Obes Facts. 2020;13(2):191-200.
-3.	Gupta S, Chen M. Medical management of obesity. Clin Med (Lond). 2023;23(4):323-9.
-4.	Andrea G, Anna G, Diana S. Productivity loss due to overweight and obesity: a systematic review of indirect costs. BMJ Open. 2017;7(10):e014632.
-5.	Mansoor S, Jain P, Hassan N, Farooq U, Mirza MA, Pandith AA, et al. Role of Genetic and Dietary Implications in the Pathogenesis of Global Obesity. Food Reviews International. 2022;38(sup1):434-55.
-6.	Lahti-Koski M, Pietinen P, Heliövaara M, Vartiainen E. Associations of body mass index and obesity with physical activity, food choices, alcohol intake, and smoking in the 1982-1997 FINRISK Studies. Am J Clin Nutr. 2002;75(5):809-17.
-7.	Flegal KM, Kit BK, Orpana H, Graubard BI. Association of all-cause mortality with overweight and obesity using standard body mass index categories: a systematic review and meta-analysis. Jama. 2013;309(1):71-82.
-8.	Azeroual O. Data Wrangling in Database Systems: Purging of Dirty Data. Data (Basel). 2020;5(2):50.
-9.	Williams GJ. The Essentials of Data Science : Knowledge Discovery Using R. First edition. ed. Boca Raton, FL: CRC Press; 2017.
-10.	Krause A, Rennie N, Tarran B. Best Practices for Data Visualisation 2024. Available from: https://royal-statistical-society.github.io/datavisguide/.
-11.	Yihui X, Allaire JJ, Garrett G. R Markdown: The Definitive Guide 2023. Available from: https://bookdown.org/yihui/rmarkdown/document-templates.html?version=2023.12.0+369&mode=desktop.
-
 
 
