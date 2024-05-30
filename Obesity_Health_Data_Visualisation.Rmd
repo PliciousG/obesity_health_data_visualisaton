@@ -1,4 +1,3 @@
----
 title: "How Do the Levels of Physical Activity, Smoking Status, and Alcohol Consumption Relate to Different Levels of Obesity?"
 output:
   html_document:
@@ -6,9 +5,6 @@ output:
     toc_float: true
     theme: cerulean
     highlight: kate
----
-
-```{r include=FALSE}
 
 # loading libaries
 library(readxl)
@@ -19,15 +15,9 @@ library(plotly)
 library(gt)
 library(gtsummary)
 library(kableExtra)
-```
-
-```{r include=FALSE}
 
 # reading the dataset
-obesity_data <- read_excel("C:\\Users\\___\\Downloads\\Obesity_Data.xlsx")
-```
-
-```{r include=FALSE}
+obesity_data <- read_excel("C:\\Users\\preci\\Downloads\\Obesity_Data.xlsx")
 
 # to get a comprehensive overview of the data
 # to inspect the data structure and identify the data types
@@ -35,10 +25,7 @@ glimpse(obesity_data)
 str(obesity_data)
 summary(obesity_data)
 
-# data types of categorical variables like gender and daily meals are mismatched (in character format) 
-```
-
-```{r include=FALSE}
+# data types of categorical variables like gender and daily meals are mismatched (in character format)
 
 # to get a better view of the data across different segments
 head(obesity_data)
@@ -47,33 +34,23 @@ sample_n(obesity_data, 10)
 
 # data inconsistencies were observed in variables- Age, Height, Weight, and categorical variables- FCVC, NCP, CH2O, FAF, and TUE
 
-```
-
-```{r include=FALSE}
 # assessing data completeness
 
 colSums(is.na(obesity_data))
 sum(is.na(obesity_data))
 
 # there were no missing data
-```
 
-```{r include=FALSE}
 # checking for duplicate entries 
 sum(duplicated(obesity_data))
 
 # also no duplicates
-```
 
-```{r include=FALSE}
 # initial data cleaning
 
 # copying the original dataframe to retain the original data
 data<- obesity_data
-```
 
-
-```{r include=FALSE}
 
 # correcting data type mismatch by converting categorical variables from character to factors
 
@@ -87,9 +64,7 @@ data$CALC <- as.factor(data$CALC)
 data$MTRANS <- as.factor(data$MTRANS)
 data$NObeyesdad <- factor(data$NObeyesdad,
                           levels = c("Insufficient_Weight", "Normal_Weight", "Overweight_Level_I", "Overweight_Level_II", "Obesity_Type_I", "Obesity_Type_II", "Obesity_Type_III"))
-```
 
-```{r include=FALSE}
 # to correct the data type for the variables FCVC, NCP, CH2O, FAF, and TUE, the decimal factors within these variables will first be mapped to the nearest category to ensure they are not treated as distinct levels of the factor
 
 
@@ -113,10 +88,8 @@ data$FCVC_mapped <- as.factor(data$FCVC_mapped)
 
 print(data$FCVC_mapped)
 print(unique(data$FCVC_mapped))
-```
 
 
-```{r include=FALSE}
 # converting the others
 # correcting NCP data type
 intended_categories_NCP <- c(1, 2, 3)
@@ -153,9 +126,7 @@ data$TUE_mapped <- map_to_nearest_category(data$TUE, intended_categories_TUE)
 data$TUE_mapped <- as.factor(data$TUE_mapped)
 
 print(unique(data$NCP_mapped))
-```
 
-```{r include=FALSE}
 # cleaning weight and height by rounding up to two decimal values
 data$New_Weight <- round(data$Weight, digits = 2)
 print(data$New_Weight)
@@ -163,20 +134,30 @@ print(data$New_Weight)
 data$New_Height <- round(data$Height, digits = 2)
 print(data$New_Height)
 
-```
 
-
-```{r include=FALSE}
 # creating a neww dataframe with cleaned variables for easy viaualisation
 
 new_data<- data %>%
   select(Gender, Age, New_Height, New_Weight, family_history_with_overweight, FAVC, FCVC_mapped, NCP_mapped, CAEC, SMOKE, CH2O_mapped, SCC, FAF_mapped, TUE_mapped, CALC, MTRANS, NObeyesdad)
   
 str(new_data)
-```
 
 
-```{r include=FALSE}
+# cleaning weight and height by rounding up to two decimal values
+data$New_Weight <- round(data$Weight, digits = 2)
+print(data$New_Weight)
+
+data$New_Height <- round(data$Height, digits = 2)
+print(data$New_Height)
+
+
+# creating a neww dataframe with cleaned variables for easy viaualisation
+
+new_data<- data %>%
+  select(Gender, Age, New_Height, New_Weight, family_history_with_overweight, FAVC, FCVC_mapped, NCP_mapped, CAEC, SMOKE, CH2O_mapped, SCC, FAF_mapped, TUE_mapped, CALC, MTRANS, NObeyesdad)
+  
+str(new_data)
+
 
 # FURTHER EXPLORATION
 
@@ -201,20 +182,14 @@ sum_outliers <- colSums(outliers)
 print(sum_outliers)
 
 # outliers are present in age (168), New_Weight (1)
-```
 
-
-```{r include=FALSE}
 # visualising the outliers in age
 ggplot(new_data, aes(y = Age)) +
   geom_boxplot(fill = "grey", color = "black") +
   theme_minimal() +
   ggtitle("Box Plot of Age")
 
-```
 
-
-```{r include=FALSE}
 # visualisng age distribution to better understand the outliers
 
 # categorising age into age_bins to improve consistency and reduce the complexity of the data for visualisation
@@ -241,10 +216,8 @@ ggplot(age_group_counts, aes(x = age_group, y = count)) +
         axis.text.x = element_text(angle = 45, hjust = 1),
         plot.title = element_text(hjust = 0.5))
 # the dataset is skwed by age, 1827 of the total 2111 participants are within the ages of 18-35 years.
-```
 
 
-```{r include=FALSE}
 # visualising the outlier in weight
 # boxplot of weight by gender with outliers highlighted in blue
 
@@ -257,7 +230,7 @@ max(new_data$New_Weight)
 
 # this outlier will be ignored considering it is a single outlier and unlikely to have a significant effect on the dataset
 
-```
+
 
 
 ***
@@ -316,13 +289,11 @@ kable_table <- summary_table %>%
 kable_table
 
 ```
-```
 FAVC (High Caloric Food Consumption, no/yes), FCVC (Vegetable Intake, scale: Never (1), Sometimes (2), Always(3)), NCP (Main Meals Daily, scale: between 1 and 2(1), three(2), more than three(3)), CAEC (Snacking between meals), CH2O (Water Consumption Daily, scale: <1L(1), 1-2L(2), >2L(3)), SCC (Calorie Monitoring), FAF (Physical Activity Frequency, scale: none (0) ,1 or 2 days (1), 2 or 3 days (2), 4 or 5 days (3)), TUE (Tech Use Duration, 0-2 hours (0), 3-5 hours (1), more than 5 hours (2)), CALC (Alcohol Consumption), MTRANS (Usual Transport Method), NObeyesdad (Obesity Categories).
 ```
 
 
 
-```{r include=FALSE}
 # for a more detailed summary
 # creating a demographic summary table by level of obesity
 table_demographic <- new_data %>%
@@ -351,7 +322,6 @@ kable_table <- table_demographic %>%
   kableExtra::scroll_box(width = "100%", height = "500px")
 
 kable_table
-```
 
 
 
@@ -360,7 +330,6 @@ kable_table
 
 ***
 
-```{r echo=FALSE}
 # filtering the dataset by obesity levels I, II, and III
 data_filtered <- subset(new_data, NObeyesdad %in% c("Obesity_Type_I", "Obesity_Type_II", "Obesity_Type_III"))
 
@@ -388,7 +357,6 @@ ggplot(data_filtered, aes(x = FAF_mapped)) +
         axis.title = element_text(size = 12),
         plot.title = element_text(size = 16, face = "bold"),
         legend.position = "none")
-```
 
 
 ***
@@ -397,7 +365,6 @@ ggplot(data_filtered, aes(x = FAF_mapped)) +
 
 ***
 
-```{r echo=FALSE}
 
 # plotting smoking status by obesity levels
 data_filtered$SMOKE <- factor(data_filtered$SMOKE, labels = c("No", "Yes"))
@@ -415,8 +382,6 @@ ggplot(data_filtered, aes(x = NObeyesdad, fill = SMOKE)) +
         plot.title = element_text(size = 14, face = "bold"),
         legend.title = element_text(size = 12))
 
-```
-
 
 
 ***
@@ -424,8 +389,6 @@ ggplot(data_filtered, aes(x = NObeyesdad, fill = SMOKE)) +
 #### Visualisation 4: Alcohol Consumpution Across Obesity Types
 
 ***
-
-```{r echo=FALSE}
 
 # creating an interactive plot with ggplot and plotly
 
@@ -444,7 +407,5 @@ p <- ggplot(data_filtered, aes(x = NObeyesdad, fill = CALC)) +
         plot.title = element_text(size = 14, face = "bold"))
 
 ggplotly(p)
-
-```
 
 
