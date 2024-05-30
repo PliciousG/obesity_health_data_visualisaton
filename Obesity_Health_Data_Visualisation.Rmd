@@ -242,7 +242,6 @@ max(new_data$New_Weight)
 **Table 1. Demographic Summary Table**
 
 
-```{r echo=FALSE}
 # creating a demographic summary table
 summary_table <- new_data %>%
   select(-age_group) %>%
