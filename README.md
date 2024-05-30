@@ -21,14 +21,17 @@ The dataset was explored to identify outliers and understand the distribution of
 
 **Demographic Summary Table**
 A demographic summary table was generated to provide an overview of the dataset, stratified by gender. The table includes mean, standard deviation, median, and interquartile range for continuous variables, and counts and percentages for categorical variables.
-Physical Activity Across Obesity Types
+
+**Physical Activity Across Obesity Types**
 A bar chart was created to compare the frequency of physical activity across different obesity levels (I, II, and III). The chart shows the distribution of individuals engaging in physical activity for various durations (none, 1-2 days, 2-3 days, and 4-5 days) within each obesity level.
+![image](https://github.com/PliciousG/obesity_health_data_visualisaton/blob/main/Images/vis_1.png)
 
 **Smoking Status Across Obesity Types**
-A bar chart was generated to visualise the distribution of smokers and non-smokers within each obesity category. 
-
+A bar chart was generated to visualise the distribution of smokers and non-smokers within each obesity category.
+![image](https://github.com/PliciousG/obesity_health_data_visualisaton/blob/main/Images/vis_2.png)
 **Alcohol Consumption Across Obesity Types**
 An interactive plot was created using ggplot and plotly to display the distribution of alcohol consumption (no, sometimes, frequently, and always) across different obesity levels.
+![image](https://github.com/PliciousG/obesity_health_data_visualisaton/blob/main/Images/vis_3.png)
 
 ## Conclusion
 This project provides valuable insights into the relationships between obesity levels and lifestyle factors such as physical activity, smoking status, and alcohol consumption. The visualizations can help inform targeted interventions and public health strategies to address obesity and its associated risk factors.
