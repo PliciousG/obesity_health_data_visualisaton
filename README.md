@@ -38,5 +38,13 @@ An interactive plot was created using ggplot and plotly to display the distribut
 
 ![image](https://github.com/PliciousG/obesity_health_data_visualisaton/blob/main/Images/vis_3.png)
 
+## Summary of Findings
+
+The charts reveals a trend where higher levels of obesity are associated with lower levels of physical activity and higher alcohol consumption. The chart on smoking status revealed a significant disproportion in data which would require further clarification.
+
+## Implications for Policy and Public Health
+
+The observed trends in physical activity and alcohol consumption reveals potential areas for public health intervention. The inverse relationship between physical activity and obesity types suggests a need for policies that promote physical activity, especially for individuals at higher obesity levels, and as a preventive measure for individuals in overweight categories. Likewise, alcohol reduction interventions could be beneficial considering the positive association between alcohol consumption and obesity levels.
+
 ## Conclusion
 This project provides valuable insights into the relationships between obesity levels and lifestyle factors such as physical activity, smoking status, and alcohol consumption. The visualizations can help inform targeted interventions and public health strategies to address obesity and its associated risk factors.
